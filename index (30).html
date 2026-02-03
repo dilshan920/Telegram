@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech With Nishan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e2022;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px; 
+            background-color: #8faec4;
+            background-image: url('https://telegram.org/file/464001802/1/bH6t8-CSr2Y.129325/a27c2a7f055663738e');
+            background-size: cover;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header Area */
+        .header {
+            background-color: #517da2;
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            z-index: 100;
+            height: 55px;
+            box-sizing: border-box;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            margin-right: 15px; 
+            background-image: url('https://i.postimg.cc/7ZnDwxtv/images-(7).jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .header-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-info h4 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .verified-badge {
+            background-color: #fff; 
+            color: #517da2; 
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            font-size: 10px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+        }
+
+        .header-info p {
+            margin: 2px 0 0 0;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 5px;
+        }
+
+        .bell-img {
+            width: 24px;
+            height: 24px;
+            filter: invert(1); 
+        }
+
+        .message-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 15px 80px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Post Styles */
+        .tg-post {
+            background-color: white;
+            border-radius: 6px 12px 12px 6px;
+            padding: 8px 10px;
+            max-width: 90%;
+            align-self: flex-start;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            position: relative;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .tg-post:active {
+            background-color: #f5f5f5; 
+        }
+
+        .tg-post::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: -8px;
+            width: 12px;
+            height: 20px;
+            background-color: inherit;
+            border-bottom-right-radius: 10px;
+            z-index: -1;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .post-title {
+            color: #3b769f;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .post-text {
+            font-size: 15px;
+            color: #000;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .post-text a {
+            color: #168acd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* --- New Reaction Bubbles (Pills) --- */
+        .reaction-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        
+        .reaction-pill {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f0f4f8; /* Light blue-ish like Telegram light mode */
+            /* Note: Screenshot showed dark mode, but this app is light mode inside posts. 
+               If you want dark pills: background-color: #2b3846; color: white; */
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #517da2;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .reaction-pill:active { transform: scale(0.95); }
+        .reaction-pill span { margin-left: 4px; }
+
+        /* Premium Star Style (Optional first item) */
+        .premium-star {
+            background-color: #FFD700;
+            color: #333;
+        }
+
+        .post-meta {
+            float: right;
+            margin-top: 5px;
+            margin-left: 10px;
+            font-size: 11px;
+            color: #a0b1c5;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .real-eye-icon {
+            width: 12px;
+            height: 12px;
+            opacity: 0.6;
+            margin-right: 2px;
+        }
+
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: transparent; 
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .follow-btn {
+            background-color: #40a7e3;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+            transition: background-color 0.3s;
+        }
+        .follow-btn.unfollow-mode { background-color: #ff5959; }
+
+        /* --- Toast Notification --- */
+        .toast-notification {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(30, 30, 30, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            white-space: nowrap;
+        }
+        .toast-notification.visible { opacity: 1; }
+
+        /* --- Admin & Context Menu Styles --- */
+        .admin-modal, .context-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .admin-modal { background-color: rgba(0,0,0,0.85); }
+        .admin-content {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px;
+            width: 85%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .admin-input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .admin-btn { padding: 10px; background-color: #517da2; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .close-btn { background-color: #666; }
+        .admin-post-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; max-height: 200px; overflow-y: auto; background:#fff; padding:5px; border-radius:5px;}
+        .admin-post-card { display: flex; justify-content: space-between; align-items: center; background: #f0f4f8; padding: 8px; border-radius: 5px; border-left: 3px solid #517da2; }
+        .admin-delete-icon { background: #ffcccc; color: #d32f2f; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        /* Context Menu */
+        .context-modal-overlay {
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .context-reaction-bar {
+            background-color: #212d3b;
+            padding: 10px 15px;
+            border-radius: 30px;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            animation: popIn 0.2s ease-out;
+        }
+        .context-emoji { font-size: 26px; cursor: pointer; transition: transform 0.2s; }
+        .context-emoji:hover { transform: scale(1.3); }
+
+        .context-menu-box {
+            background-color: #212d3b;
+            width: 220px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            animation: popIn 0.2s ease-out;
+        }
+        .context-item {
+            padding: 12px 15px;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            border-bottom: 1px solid #2b3846;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .context-item:last-child { border-bottom: none; }
+        .context-item:active { background-color: #1a232e; }
+        .context-icon { width: 20px; filter: invert(1); opacity: 0.9; }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header" id="headerTrigger">
+            <div class="profile-pic"></div>
+            <div class="header-info">
+                <h4>Tech With Nishan <span class="verified-badge">✔</span></h4>
+                <p>427K subscribers</p>
+            </div>
+            <button class="notification-btn" id="bellIcon">
+                <img src="https://cdn-icons-png.flaticon.com/512/3602/3602145.png" class="bell-img" alt="bell">
+            </button>
+        </div>
+
+        <div class="message-area" id="msgArea"></div>
+
+        <div class="bottom-bar">
+            <button class="follow-btn" id="actionBtn">LOADING...</button>
+        </div>
+        
+        <div class="toast-notification" id="appToast">Message</div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-content">
+            <h3>CREATE NEW POST</h3>
+            <input type="text" id="imgUrlInput" class="admin-input" placeholder="Image URL (Optional)">
+            <textarea id="textInput" class="admin-input" rows="3" placeholder="Type your message here..."></textarea>
+            <button class="admin-btn" onclick="submitPost()">POST NOW</button>
+            <h3 style="margin-top: 15px;">MANAGE POSTS</h3>
+            <div class="admin-post-list" id="adminPostList"></div>
+            <button class="admin-btn close-btn" onclick="closeAdmin()" style="margin-top:10px;">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Context Menu Modal -->
+    <div class="context-modal-overlay" id="contextOverlay" onclick="closeContext(event)">
+        <div class="context-reaction-bar" onclick="event.stopPropagation()">
+            <span class="context-emoji" onclick="addReaction('👍')">👍</span>
+            <span class="context-emoji" onclick="addReaction('🔥')">🔥</span>
+            <span class="context-emoji" onclick="addReaction('🥰')">🥰</span>
+            <span class="context-emoji" onclick="addReaction('😱')">😱</span>
+            <span class="context-emoji" onclick="addReaction('😍')">😍</span>
+            <span class="context-emoji" onclick="addReaction('💯')">💯</span>
+        </div>
+        <div class="context-menu-box" onclick="event.stopPropagation()">
+            <div class="context-item" onclick="triggerToast('Reply')">
+                <img src="https://cdn-icons-png.flaticon.com/512/93/93634.png" class="context-icon"> Reply
+            </div>
+            <div class="context-item" onclick="copyPostText()">
+                <img src="https://cdn-icons-png.flaticon.com/512/1621/1621635.png" class="context-icon"> Copy
+            </div>
+            <div class="context-item" onclick="copyLink()">
+                <img src="https://cdn-icons-png.flaticon.com/512/2089/2089702.png" class="context-icon"> Copy Link
+            </div>
+            <div class="context-item" onclick="triggerToast('Saved to Gallery')">
+                <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" class="context-icon"> Save to Gallery
+            </div>
+            <div class="context-item" onclick="triggerToast('Forward')">
+                <img src="https://cdn-icons-png.flaticon.com/512/929/929750.png" class="context-icon"> Forward
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPostKey = null;
+        let currentPostText = "";
+        let userReactions = JSON.parse(localStorage.getItem('userReactionsMap')) || {}; // Store { postKey: { emoji: count } }
+
+        const toast = document.getElementById('appToast');
+        function triggerToast(message) {
+            toast.innerText = message;
+            toast.classList.add('visible');
+            contextOverlay.style.display = "none"; 
+            setTimeout(() => { toast.classList.remove('visible'); }, 2000);
+        }
+
+        const contextOverlay = document.getElementById('contextOverlay');
+        function openContext(key, text) {
+            currentPostKey = key;
+            currentPostText = text;
+            contextOverlay.style.display = "flex";
+        }
+
+        function closeContext(e) {
+            if(e.target === contextOverlay) contextOverlay.style.display = "none";
+        }
+
+        function copyPostText() {
+            navigator.clipboard.writeText(currentPostText);
+            triggerToast("Text Copied");
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText("https://t.me/techwithnishan/" + currentPostKey);
+            triggerToast("Link Copied");
+        }
+
+        function addReaction(emoji) {
+            if(currentPostKey) {
+                // Initialize structure if needed
+                if(!userReactions[currentPostKey]) userReactions[currentPostKey] = {};
+                if(!userReactions[currentPostKey][emoji]) userReactions[currentPostKey][emoji] = 0;
+                
+                // Add click count
+                userReactions[currentPostKey][emoji]++;
+                localStorage.setItem('userReactionsMap', JSON.stringify(userReactions));
+                
+                // Force update UI
+                window.updateSinglePostStats(currentPostKey); 
+                triggerToast("You reacted " + emoji);
+            }
+        }
+
+        let clickCount = 0;
+        const header = document.getElementById('headerTrigger');
+        const adminModal = document.getElementById('adminModal');
+
+        header.addEventListener('click', function() {
+            clickCount++;
+            if (clickCount === 5) {
+                let pin = prompt("Enter PIN:");
+                if (pin === "0000") adminModal.style.display = "flex";
+                else alert("Access Denied!");
+                clickCount = 0;
+            }
+            setTimeout(() => { clickCount = 0; }, 2000);
+        });
+        function closeAdmin() { adminModal.style.display = "none"; }
+
+        const bellIcon = document.getElementById('bellIcon');
+        bellIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            bellIcon.style.display = 'none';
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9R1khyhHSjevglSUWMscQ_JnFqz53c3w",
+            authDomain: "telegram-74f4b.firebaseapp.com",
+            databaseURL: "https://telegram-74f4b-default-rtdb.firebaseio.com",
+            projectId: "telegram-74f4b",
+            storageBucket: "telegram-74f4b.firebasestorage.app",
+            messagingSenderId: "869866083336",
+            appId: "1:869866083336:web:e9650188da2a5efa2badbd",
+            measurementId: "G-WKH32NE68E"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let userId = localStorage.getItem('tg_user_id');
+        if (!userId) {
+            userId = 'user_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('tg_user_id', userId);
+        }
+        const userStatusRef = ref(db, 'users/' + userId + '/isFollowing');
+        const btn = document.getElementById("actionBtn");
+        let isFollowing = false;
+
+        onValue(userStatusRef, (snapshot) => {
+            isFollowing = (snapshot.val() === true);
+            if (isFollowing) {
+                btn.innerText = "UNFOLLOW";
+                btn.classList.add("unfollow-mode");
+            } else {
+                btn.innerText = "FOLLOW";
+                btn.classList.remove("unfollow-mode");
+            }
+        });
+        window.toggleFollow = function() { set(userStatusRef, !isFollowing); }
+        btn.addEventListener('click', window.toggleFollow);
+
+        window.submitPost = function() {
+            const text = document.getElementById('textInput').value;
+            const imgUrl = document.getElementById('imgUrlInput').value;
+            if (text.trim() === "" && imgUrl.trim() === "") return;
+
+            const postData = {
+                text: text,
+                image: imgUrl,
+                timestamp: Date.now() 
+            };
+            push(ref(db, 'posts'), postData);
+            document.getElementById('textInput').value = "";
+            document.getElementById('imgUrlInput').value = "";
+            triggerToast("Post Published!");
+        }
+
+        window.deletePost = function(postKey) {
+            if(confirm("Permanently delete this post?")) {
+                remove(ref(db, 'posts/' + postKey));
+            }
+        }
+
+        function formatText(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+        }
+
+        function formatCount(num) {
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return Math.floor(num);
+        }
+
+        // --- MATH: Calculate Total and Distribute into Pills ---
+        const reactionTypes = ['👍', '🔥', '🥰', '😱', '😍', '💯'];
+
+        function getStats(timestamp, key) {
+            const now = Date.now();
+            const minutesElapsed = (now - timestamp) / (1000 * 60);
+            
+            // 1. Calculate Views
+            let views = Math.floor(minutesElapsed * 112); 
+            views += (timestamp % 100); 
+            if (views > 235400) views = 235400;
+            if (views < 1) views = 1;
+
+            // 2. Calculate Total Reactions
+            let totalReactions = 0;
+            const seed = (timestamp % 50);
+
+            if (minutesElapsed < 2) {
+                let growth = (minutesElapsed / 2) * 40; 
+                totalReactions = 50 + growth + (seed % 10);
+                if (totalReactions > 90) totalReactions = 90;
+            } else if (minutesElapsed >= 1440) { 
+                let extra = (minutesElapsed - 1440) * 10; 
+                totalReactions = 75000 + extra + (seed * 100);
+                if (totalReactions > 125000) totalReactions = 125000;
+            } else {
+                totalReactions = 90 + ((minutesElapsed - 2) * 52);
+            }
+            
+            totalReactions = Math.floor(totalReactions);
+
+            // 3. Distribute Total into Emojis (Deterministic)
+            // Use timestamp digits to shuffle percentages so every post looks different
+            let breakdown = [];
+            let remaining = totalReactions;
+            
+            // Pseudo-random weights based on timestamp
+            let weights = reactionTypes.map((_, i) => (timestamp % (10 + i)) + 5); 
+            let totalWeight = weights.reduce((a, b) => a + b, 0);
+
+            reactionTypes.forEach((emoji, index) => {
+                let count = Math.floor((weights[index] / totalWeight) * totalReactions);
+                
+                // Add User Clicks specifically to this emoji
+                if(userReactions[key] && userReactions[key][emoji]) {
+                    count += userReactions[key][emoji];
+                }
+                
+                // Only show if count > 0 (or force show specific ones)
+                if(count > 0) {
+                     breakdown.push({ emoji: emoji, count: count });
+                }
+            });
+
+            // Sort by count (Desc) to look like Telegram (Most popular first)
+            breakdown.sort((a, b) => b.count - a.count);
+
+            return {
+                views: formatCount(views),
+                breakdown: breakdown
+            };
+        }
+
+        // --- Helper to Generate HTML for Pills ---
+        function generateReactionHTML(breakdown) {
+            return breakdown.map(item => `
+                <div class="reaction-pill">
+                    ${item.emoji} <span>${formatCount(item.count)}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- Render & Update Loop ---
+        const msgArea = document.getElementById('msgArea');
+        const adminPostList = document.getElementById('adminPostList');
+        const postsRef = ref(db, 'posts');
+        let allPostsData = {}; 
+
+        onValue(postsRef, (snapshot) => {
+            msgArea.innerHTML = "";
+            adminPostList.innerHTML = "";
+            const posts = snapshot.val();
+            allPostsData = posts || {};
+            
+            if (posts) {
+                const entries = Object.entries(posts);
+                
+                entries.forEach(([key, post]) => {
+                    const time = new Date(post.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const formattedText = formatText(post.text);
+                    const stats = getStats(post.timestamp, key);
+
+                    let imgHTML = "";
+                    if (post.image && post.image.trim() !== "") {
+                        imgHTML = `<img src="${post.image}" class="post-image">`;
+                    }
+
+                    const newPost = document.createElement("div");
+                    newPost.classList.add("tg-post");
+                    newPost.id = `post-${key}`;
+                    newPost.onclick = function(e) { 
+                        if(e.target.tagName !== 'A' && !e.target.closest('.reaction-pill')) {
+                            openContext(key, post.text); 
+                        }
+                    };
+
+                    newPost.innerHTML = `
+                        <div class="post-title">Tech With Nishan</div>
+                        ${imgHTML}
+                        <div class="post-text">${formattedText}</div>
+                        
+                        <div class="reaction-container" id="react-container-${key}">
+                            ${generateReactionHTML(stats.breakdown)}
+                        </div>
+
+                        <div class="post-meta">
+                            <img src="https://cdn-icons-png.flaticon.com/512/709/709612.png" class="real-eye-icon" alt="views">
+                            <span id="views-${key}">${stats.views}</span>
+                            <span style="margin-left:5px">${time}</span>
+                        </div>
+                    `;
+                    msgArea.appendChild(newPost);
+                });
+                msgArea.scrollTop = msgArea.scrollHeight;
+
+                [...entries].reverse().forEach(([key, post]) => {
+                    const txtPreview = post.text ? post.text.substring(0, 20) : "Image";
+                    const card = document.createElement("div");
+                    card.classList.add("admin-post-card");
+                    card.innerHTML = `
+                        <div style="font-size:12px;">${txtPreview}...</div>
+                        <button class="admin-delete-icon" onclick="deletePost('${key}')">❌</button>
+                    `;
+                    adminPostList.appendChild(card);
+                });
+            }
+        });
+
+        // --- Live Update Timer (2s) ---
+        setInterval(() => {
+            if(allPostsData) {
+                Object.entries(allPostsData).forEach(([key, post]) => {
+                    const stats = getStats(post.timestamp, key);
+                    
+                    const container = document.getElementById(`react-container-${key}`);
+                    const viewEl = document.getElementById(`views-${key}`);
+
+                    // Re-generate HTML for pills to update numbers and order
+                    if(container) container.innerHTML = generateReactionHTML(stats.breakdown);
+                    if(viewEl) viewEl.innerText = stats.views;
+                });
+            }
+        }, 2000);
+
+        window.updateSinglePostStats = function(key) {
+             if(allPostsData && allPostsData[key]) {
+                const stats = getStats(allPostsData[key].timestamp, key);
+                const container = document.getElementById(`react-container-${key}`);
+                if(container) container.innerHTML = generateReactionHTML(stats.breakdown);
+             }
+        }
+
+    </script>
+
+</body>
+</html>
